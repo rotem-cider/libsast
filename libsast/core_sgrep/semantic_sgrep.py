@@ -6,6 +6,7 @@ from libsast import common
 
 class SemanticGrep:
     def __init__(self, options: dict) -> None:
+        self.raw = options.get('raw') or False
         self.scan_rules = options.get('sgrep_rules')
         self.show_progress = options.get('show_progress')
         exts = options.get('sgrep_extensions')
@@ -34,6 +35,10 @@ class SemanticGrep:
                 (paths, self.scan_rules))
         else:
             sgrep_out = invoke_semgrep(paths, self.scan_rules)
+
+        if self.raw:
+            return sgrep_out
+
         self.format_output(sgrep_out)
         return self.findings
 
